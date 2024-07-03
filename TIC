@@ -1,0 +1,69 @@
+from tkinter import *
+
+window = Tk()
+window.geometry("600x420+100+75")
+window.title("Tic Tac Toe")
+
+lst = [" " for _ in range(9)]
+user = "X"
+
+def changeUser():
+    global user
+    user = "O" if user == "X" else "X"
+
+def check_winner():
+    winning_combinations = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],  # Rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],  # Columns
+        [0, 4, 8], [2, 4, 6]  # Diagonals
+    ]
+    for combo in winning_combinations:
+        if lst[combo[0]] == lst[combo[1]] == lst[combo[2]] != " ":
+            return True
+    return False
+
+def is_board_full():
+    return " " not in lst
+
+def play(n):
+    global lst, user
+    if lst[n-1] == " ":
+        lst[n-1] = user
+        buttons[n-1].config(text=user)
+        if check_winner():
+            print(f"Player {user} wins!")
+            disable_all_buttons()
+        elif is_board_full():
+            print("It's a tie!")
+        else:
+            changeUser()
+
+def disable_all_buttons():
+    for button in buttons:
+        button.config(state=DISABLED)
+
+buttons = []
+for i in range(9):
+    button = Button(
+        window,
+        text=" ",
+        bg="#303F9F",
+        fg="#FFFFFF",
+        font=("Arial", 24, "bold"),
+        width=10,
+        height=3,
+        command=lambda x=i+1: play(x)
+    )
+    buttons.append(button)
+
+buttons[0].place(x=0, y=0)
+buttons[1].place(x=200, y=0)
+buttons[2].place(x=400, y=0)
+buttons[3].place(x=0, y=140)
+buttons[4].place(x=200, y=140)
+buttons[5].place(x=400, y=140)
+buttons[6].place(x=0, y=280)
+buttons[7].place(x=200, y=280)
+buttons[8].place(x=400, y=280)
+
+window.mainloop()
